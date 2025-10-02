@@ -8,6 +8,7 @@ export default function AdCopyGenerator() {
   const [formQuestions, setFormQuestions] = useState([]);
   const [formAnswers, setFormAnswers] = useState({});
   const [generatedImage, setGeneratedImage] = useState("");
+  const [generatedCaption, setGeneratedCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -99,11 +100,41 @@ export default function AdCopyGenerator() {
       });
 
       setGeneratedImage(data.data[0].url);
-      setStep(3);
+      await generateCaption();
     } catch (err) {
       setError(err.message || "Failed to generate image");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const generateCaption = async () => {
+    try {
+      const answersText = formQuestions
+        .map((q, i) => `${q.question} ${formAnswers[i] || "Not specified"}`)
+        .join(". ");
+
+      const data = await callOpenAI("chat/completions", {
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a creative copywriter. Generate a catchy, engaging ad caption based on the product details. Keep it concise (1-2 sentences, max 150 characters). Make it compelling and action-oriented. Return ONLY the caption text.",
+          },
+          {
+            role: "user",
+            content: `Original request: "${initialPrompt}". Details: ${answersText}`,
+          },
+        ],
+        temperature: 0.9,
+      });
+
+      const caption = data.choices[0].message.content.trim().replace(/^["']|["']$/g, '');
+      setGeneratedCaption(caption);
+      setStep(3);
+    } catch (err) {
+      setError(err.message || "Failed to generate caption");
     }
   };
 
@@ -113,6 +144,7 @@ export default function AdCopyGenerator() {
     setFormQuestions([]);
     setFormAnswers({});
     setGeneratedImage("");
+    setGeneratedCaption("");
     setError("");
   };
 
@@ -227,6 +259,13 @@ export default function AdCopyGenerator() {
             <div className="mb-8 rounded-2xl overflow-hidden shadow-xl">
               <img src={generatedImage} alt="Generated ad" className="w-full h-auto" />
             </div>
+            {generatedCaption && (
+              <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200/50">
+                <p className="text-gray-800 text-center text-lg font-light italic">
+                  "{generatedCaption}"
+                </p>
+              </div>
+            )}
             <div className="flex gap-4">
               <button
                 onClick={reset}
