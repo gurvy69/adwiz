@@ -1,5 +1,6 @@
+import './globals.css'
 export const metadata = {
-  title: 'AdCraft - AI Ad Generator',
+  title: 'AdWiz - AI Ad Generator',
   description: 'Generate stunning ad copy in minutes',
 };
 
