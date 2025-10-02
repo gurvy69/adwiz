@@ -2,16 +2,15 @@
 import React, { useState } from "react";
 import { Sparkles, ImagePlus } from "lucide-react";
 
-
 export default function AdCopyGenerator() {
   const [step, setStep] = useState(1);
   const [initialPrompt, setInitialPrompt] = useState("");
   const [formQuestions, setFormQuestions] = useState([]);
   const [formAnswers, setFormAnswers] = useState({});
   const [generatedImage, setGeneratedImage] = useState("");
+  const [generatedCaption, setGeneratedCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
 
   const callOpenAI = async (endpoint, payload) => {
     const res = await fetch("/api/openai", {
@@ -20,17 +19,14 @@ export default function AdCopyGenerator() {
       body: JSON.stringify({ endpoint, payload }),
     });
 
-
     const data = await res.json();
     if (data.error) throw new Error(data.error.message || data.error);
     return data;
   };
 
-
   const generateForm = async () => {
     setLoading(true);
     setError("");
-
 
     try {
       const data = await callOpenAI("chat/completions", {
@@ -49,7 +45,6 @@ export default function AdCopyGenerator() {
         temperature: 0.7,
       });
 
-
       const content = data.choices[0].message.content;
       const questions = JSON.parse(content.match(/\[[\s\S]*\]/)[0]);
       setFormQuestions(questions);
@@ -61,17 +56,14 @@ export default function AdCopyGenerator() {
     }
   };
 
-
   const generateImagePrompt = async () => {
     setLoading(true);
     setError("");
-
 
     try {
       const answersText = formQuestions
         .map((q, i) => `${q.question} ${formAnswers[i] || "Not specified"}`)
         .join(". ");
-
 
       const data = await callOpenAI("chat/completions", {
         model: "gpt-4o-mini",
@@ -89,7 +81,6 @@ export default function AdCopyGenerator() {
         temperature: 0.8,
       });
 
-
       const imagePrompt = data.choices[0].message.content.trim();
       await generateImage(imagePrompt);
     } catch (err) {
@@ -97,7 +88,6 @@ export default function AdCopyGenerator() {
       setLoading(false);
     }
   };
-
 
   const generateImage = async (prompt) => {
     try {
@@ -109,9 +99,8 @@ export default function AdCopyGenerator() {
         quality: "standard",
       });
 
-
       setGeneratedImage(data.data[0].url);
-      setStep(3);
+      await generateCaption();
     } catch (err) {
       setError(err.message || "Failed to generate image");
     } finally {
@@ -119,6 +108,35 @@ export default function AdCopyGenerator() {
     }
   };
 
+  const generateCaption = async () => {
+    try {
+      const answersText = formQuestions
+        .map((q, i) => `${q.question} ${formAnswers[i] || "Not specified"}`)
+        .join(". ");
+
+      const data = await callOpenAI("chat/completions", {
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a creative copywriter. Generate a catchy, engaging ad caption based on the product details. Keep it concise (1-2 sentences, max 150 characters). Make it compelling and action-oriented. Return ONLY the caption text.",
+          },
+          {
+            role: "user",
+            content: `Original request: "${initialPrompt}". Details: ${answersText}`,
+          },
+        ],
+        temperature: 0.9,
+      });
+
+      const caption = data.choices[0].message.content.trim().replace(/^["']|["']$/g, '');
+      setGeneratedCaption(caption);
+      setStep(3);
+    } catch (err) {
+      setError(err.message || "Failed to generate caption");
+    }
+  };
 
   const reset = () => {
     setStep(1);
@@ -126,9 +144,9 @@ export default function AdCopyGenerator() {
     setFormQuestions([]);
     setFormAnswers({});
     setGeneratedImage("");
+    setGeneratedCaption("");
     setError("");
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-20 px-4">
@@ -144,14 +162,12 @@ export default function AdCopyGenerator() {
           <p className="text-gray-600 text-sm font-light">Generate stunning ad copy in minutes</p>
         </div>
 
-
         {/* Error Display */}
         {error && (
           <div className="mb-8 p-4 bg-red-50/80 backdrop-blur-xl border border-red-200/50 rounded-2xl text-red-700 text-sm">
             {error}
           </div>
         )}
-
 
         {/* Step 1: Initial Prompt */}
         {step === 1 && (
@@ -178,7 +194,6 @@ export default function AdCopyGenerator() {
             </button>
           </div>
         )}
-
 
         {/* Step 2: Form Questions */}
         {step === 2 && (
@@ -237,7 +252,6 @@ export default function AdCopyGenerator() {
           </div>
         )}
 
-
         {/* Step 3: Generated Image */}
         {step === 3 && generatedImage && (
           <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/60 shadow-2xl p-10">
@@ -245,6 +259,13 @@ export default function AdCopyGenerator() {
             <div className="mb-8 rounded-2xl overflow-hidden shadow-xl">
               <img src={generatedImage} alt="Generated ad" className="w-full h-auto" />
             </div>
+            {generatedCaption && (
+              <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200/50">
+                <p className="text-gray-800 text-center text-lg font-light italic">
+                  "{generatedCaption}"
+                </p>
+              </div>
+            )}
             <div className="flex gap-4">
               <button
                 onClick={reset}
@@ -266,4 +287,3 @@ export default function AdCopyGenerator() {
     </div>
   );
 }
-
