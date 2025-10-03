@@ -131,23 +131,22 @@ export default function AdCopyGenerator() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-20 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
+        
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-4 bg-white/40 backdrop-blur-xl px-6 py-3 rounded-full border border-white/60 shadow-lg">
-            <Sparkles className="w-6 h-6 text-purple-600" />
-            <h1 className="text-2xl font-light bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 bg-white/40 backdrop-blur-xl px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/60 shadow-lg">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+            <h1 className="text-xl sm:text-2xl font-light bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               AdWiz
             </h1>
           </div>
-          <p className="text-gray-600 text-sm font-light">Generate stunning ad copy in minutes</p>
+          <p className="text-gray-600 text-xs sm:text-sm font-light px-4">Generate stunning ad copy in minutes</p>
         </div>
-
-
         {/* Error Display */}
         {error && (
-          <div className="mb-8 p-4 bg-red-50/80 backdrop-blur-xl border border-red-200/50 rounded-2xl text-red-700 text-sm">
+          <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-red-50/80 backdrop-blur-xl border border-red-200/50 rounded-2xl text-red-700 text-xs sm:text-sm">
             {error}
           </div>
         )}
@@ -155,39 +154,95 @@ export default function AdCopyGenerator() {
 
         {/* Step 1: Initial Prompt */}
         {step === 1 && (
-          <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/60 shadow-2xl p-10">
-            <label className="block text-sm font-light text-gray-700 mb-4">
-              What would you like to advertise?
-            </label>
-            <input
-              type="text"
-              value={initialPrompt}
-              onChange={(e) => setInitialPrompt(e.target.value)}
-              placeholder="e.g., make an ad for sweatshirts"
-              className="w-full px-5 py-4 bg-white/80 border-0 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none mb-6 text-gray-800 placeholder-gray-400"
-              onKeyPress={(e) =>
-                e.key === "Enter" && !loading && initialPrompt && generateForm()
-              }
-            />
-            <button
-              onClick={generateForm}
-              disabled={loading || !initialPrompt}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all font-light"
-            >
-              {loading ? "Generating..." : "Continue"}
-            </button>
-          </div>
+          <>
+            {/* How It Works Section */}
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-6 sm:p-8 md:p-10 mb-6 sm:mb-8">
+              <h2 className="text-lg sm:text-xl font-light text-gray-800 mb-4 sm:mb-6 text-center">How It Works</h2>
+              
+              {/* Instructions */}
+              <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-light">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800 mb-1 text-sm sm:text-base">Describe Your Product</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 font-light">Tell us what you want to advertise in simple words</p>
+                  </div>
+                </div>
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-light">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800 mb-1 text-sm sm:text-base">Customize Details</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 font-light">Answer a few questions about your target audience and preferences</p>
+                  </div>
+                </div>
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-light">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800 mb-1 text-sm sm:text-base">Get Your Ad</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 font-light">AI generates a professional ad image ready to download and use</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Video Tutorial */}
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3 text-center">Watch Tutorial</h3>
+                <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%', height: 0 }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/Gz1P7K_Yy_s"
+                    title="AdWiz Tutorial"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+
+            {/* Input Section */}
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-6 sm:p-8 md:p-10">
+              <label className="block text-xs sm:text-sm font-light text-gray-700 mb-3 sm:mb-4">
+                What would you like to advertise?
+              </label>
+              <input
+                type="text"
+                value={initialPrompt}
+                onChange={(e) => setInitialPrompt(e.target.value)}
+                placeholder="e.g., make an ad for sweatshirts"
+                className="w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/80 border-0 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none mb-4 sm:mb-6 text-sm sm:text-base text-gray-800 placeholder-gray-400"
+                onKeyPress={(e) =>
+                  e.key === "Enter" && !loading && initialPrompt && generateForm()
+                }
+              />
+              <button
+                onClick={generateForm}
+                disabled={loading || !initialPrompt}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all font-light text-sm sm:text-base"
+              >
+                {loading ? "Generating..." : "Continue"}
+              </button>
+            </div>
+            
+          </>
+          
         )}
 
-
+        
         {/* Step 2: Form Questions */}
         {step === 2 && (
-          <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/60 shadow-2xl p-10">
-            <h2 className="text-xl font-light text-gray-800 mb-8">Customize Your Ad</h2>
-            <div className="space-y-6">
+          <div className="bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-6 sm:p-8 md:p-10">
+            <h2 className="text-lg sm:text-xl font-light text-gray-800 mb-6 sm:mb-8">Customize Your Ad</h2>
+            <div className="space-y-4 sm:space-y-6">
               {formQuestions.map((q, idx) => (
                 <div key={idx}>
-                  <label className="block text-sm font-light text-gray-700 mb-3">
+                  <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2 sm:mb-3">
                     {q.question}
                   </label>
                   {q.options?.length > 0 ? (
@@ -196,7 +251,7 @@ export default function AdCopyGenerator() {
                       onChange={(e) =>
                         setFormAnswers({ ...formAnswers, [idx]: e.target.value })
                       }
-                      className="w-full px-5 py-3 bg-white/80 border-0 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-gray-800"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white/80 border-0 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-sm sm:text-base text-gray-800"
                     >
                       <option value="">Select an option</option>
                       {q.options.map((opt, i) => (
@@ -212,25 +267,25 @@ export default function AdCopyGenerator() {
                       onChange={(e) =>
                         setFormAnswers({ ...formAnswers, [idx]: e.target.value })
                       }
-                      className="w-full px-5 py-3 bg-white/80 border-0 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-gray-800"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white/80 border-0 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-sm sm:text-base text-gray-800"
                     />
                   )}
                 </div>
               ))}
             </div>
-            <div className="mt-10 flex gap-4">
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={reset}
-                className="flex-1 bg-white/80 text-gray-700 py-4 rounded-2xl hover:bg-white transition-all font-light"
+                className="w-full sm:flex-1 bg-white/80 text-gray-700 py-3 sm:py-4 rounded-xl sm:rounded-2xl hover:bg-white transition-all font-light text-sm sm:text-base"
               >
                 Start Over
               </button>
               <button
                 onClick={generateImagePrompt}
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all font-light flex items-center justify-center gap-2"
+                className="w-full sm:flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all font-light flex items-center justify-center gap-2 text-sm sm:text-base"
               >
-                <ImagePlus className="w-5 h-5" />
+                <ImagePlus className="w-4 h-4 sm:w-5 sm:h-5" />
                 {loading ? "Generating..." : "Generate"}
               </button>
             </div>
@@ -240,22 +295,22 @@ export default function AdCopyGenerator() {
 
         {/* Step 3: Generated Image */}
         {step === 3 && generatedImage && (
-          <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/60 shadow-2xl p-10">
-            <h2 className="text-xl font-light text-gray-800 mb-8">Your Ad</h2>
-            <div className="mb-8 rounded-2xl overflow-hidden shadow-xl">
+          <div className="bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/60 shadow-2xl p-6 sm:p-8 md:p-10">
+            <h2 className="text-lg sm:text-xl font-light text-gray-800 mb-6 sm:mb-8">Your Ad</h2>
+            <div className="mb-6 sm:mb-8 rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
               <img src={generatedImage} alt="Generated ad" className="w-full h-auto" />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={reset}
-                className="flex-1 bg-white/80 text-gray-700 py-4 rounded-2xl hover:bg-white transition-all font-light"
+                className="w-full sm:flex-1 bg-white/80 text-gray-700 py-3 sm:py-4 rounded-xl sm:rounded-2xl hover:bg-white transition-all font-light text-sm sm:text-base"
               >
                 Create New Ad
               </button>
               <a
                 href={generatedImage}
                 download="ad-image.png"
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl hover:shadow-xl transition-all font-light text-center"
+                className="w-full sm:flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl hover:shadow-xl transition-all font-light text-center text-sm sm:text-base"
               >
                 Download
               </a>
@@ -266,4 +321,3 @@ export default function AdCopyGenerator() {
     </div>
   );
 }
-
